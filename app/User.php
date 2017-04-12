@@ -5,10 +5,10 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Customer extends Authenticatable
+class User extends Authenticatable
 {
       // dd("sini");
-    // protected $table = 'customers';
+    protected $table = 'customers';
 
     use Notifiable;
 
@@ -18,7 +18,7 @@ class Customer extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'nama', 'email', 'password',
+        'nama', 'email', 'password', 'ver_token',
     ];
 
     /**

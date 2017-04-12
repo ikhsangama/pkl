@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Customer; //cek http://stackoverflow.com/questions/39514118/laravel-5-3-change-user-table-in-auth
+use App\User;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
-// tambahan
+// TAMBAHAN
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Registered;
+// MAIL
+use App\Mail\userRegistered;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterController extends Controller
 {
@@ -59,7 +62,7 @@ class RegisterController extends Controller
         ]);
     }
 
-    /** OVERIDE
+    /** OVERIDE laravel/framework/src/illuminate/foundation/auth/access/RegistersUsers
      * Handle a registration request for the application.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -82,11 +85,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-      // dd($data);
-        return Customer::create([
+        $user = User::create([
             'nama' => $data['nama'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
+            'ver_token' => str_random(20),
+            'verif' => 0,
         ]);
+        //mengirim email
+        Mail::to($user->email)->send(new userRegistered($user));
     }
 }
